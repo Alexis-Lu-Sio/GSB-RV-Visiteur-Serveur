@@ -86,11 +86,29 @@ def getMedicaments() :
 @app.route( '/rapports' , methods = [ 'POST' ] )
 def addRapportVisite() :
 	unRapport = json.loads( request.data )
-	numRapport = modeleGSBRV.enregistrerRapportVisite( 	unRapport[ 'matricule' ] , 
-																unRapport[ 'praticien' ] ,
+	numRapport = modeleGSBRV.enregistrerRapportVisite(	unRapport[ 'matricule' ] ,
+																unRapport['rap_num'],
 																unRapport[ 'visite' ] ,
-																unRapport[ 'bilan' ] )
+																unRapport[ 'bilan' ] ,
+																unRapport[ 'praticien' ] ,
+																unRapport[ 'dateSaisie' ] ,
+																unRapport[ 'coeffConfiance' ] ,
+																unRapport[ 'motif' ]
+																 )
+		
+	reponse = make_response( '' )												
+	if numRapport != None :
+		reponse.headers[ 'Location' ] = '/rapports/%s/%d' % ( unRapport[ 'matricule' ] , numRapport )
+		reponse.status_code = 201
+	else :
+		reponse.status_code = 409
+	return reponse
 	
+@app.route( '/rapports/echantillons' , methods = [ 'POST' ] )
+def addEchantillons(matricule, numRapport) :
+	unEchantillon = json.loads( request.data )
+	nbEchantillons = modeleGSBRV.enregistrerEchantillonsOfferts( matricule , numRapport , echantillons, quantite )
+		
 	reponse = make_response( '' )												
 	if numRapport != None :
 		reponse.headers[ 'Location' ] = '/rapports/%s/%d' % ( unRapport[ 'matricule' ] , numRapport )

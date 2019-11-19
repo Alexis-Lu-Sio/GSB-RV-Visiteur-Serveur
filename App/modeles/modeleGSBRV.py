@@ -213,7 +213,7 @@ def genererNumeroRapportVisite( matricule ) :
 		return None
 
 
-def enregistrerRapportVisite( matricule , numPraticien , dateVisite , bilan ) :
+def enregistrerRapportVisite( matricule  , rap_num , visite ,  bilan , praticien , dateSaisie , coeffConfiance , motif ) :
 	
 	numRapportVisite = genererNumeroRapportVisite( matricule )
 	
@@ -223,11 +223,11 @@ def enregistrerRapportVisite( matricule , numPraticien , dateVisite , bilan ) :
 			curseur = getConnexionBD().cursor()
 
 			requete = '''
-				insert into RapportVisite( vis_matricule , rap_num , rap_date_visite , rap_bilan , pra_num )
-				values( %s , %s , %s , %s , %s )
+				insert into RapportVisite( vis_matricule , rap_num , rap_date_visite , rap_bilan , pra_num , rap_date_saisie , rap_coeff_confiance, mot_id )
+				values( %s , %s , %s , %s , %s , %s , %s , %s )
 				'''
 
-			curseur.execute( requete, ( matricule , numRapportVisite , dateVisite , bilan , numPraticien ) )
+			curseur.execute( requete, ( matricule , rap_num , visite , bilan , praticien , dateSaisie , coeffConfiance , motif ) )
 			connexionBD.commit()
 			curseur.close()
 
@@ -240,7 +240,7 @@ def enregistrerRapportVisite( matricule , numPraticien , dateVisite , bilan ) :
 		return None
 		
 		
-def enregistrerEchantillonsOfferts( matricule , numRapport , echantillons ) :
+def enregistrerEchantillonsOfferts( matricule , numRapport , echantillons, quantite ) :
 	
 	try:
 		curseur = getConnexionBD().cursor()
@@ -252,7 +252,7 @@ def enregistrerEchantillonsOfferts( matricule , numRapport , echantillons ) :
 			
 		nbOffresInserees = 0
 		for offre in echantillons.items() :
-			curseur.execute( requete, ( matricule , numRapport , offre[ 0 ] , offre[ 1 ]) )
+			curseur.execute( requete, ( matricule , numRapport , offre[ 0 ] , offre[ 1 ], quantite) )
 			nbOffresInserees += curseur.rowcount
 			
 		connexionBD.commit()
