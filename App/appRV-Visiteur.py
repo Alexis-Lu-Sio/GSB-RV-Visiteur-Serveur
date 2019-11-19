@@ -69,6 +69,20 @@ def getPraticiens() :
 		reponse.status_code = 404
 	return reponse
 	
+@app.route( '/motifs' , methods = [ 'GET' ] )
+def getMotifs() :
+	motifs = modeleGSBRV.getMotifs()
+	
+	if motifs != None :
+		reponse = make_response( json.dumps( motifs ) )
+		reponse.mimetype = 'application/json'
+		reponse.status_code = 200
+	else :
+		reponse = make_response( '' )
+		reponse.mimetype = 'application/json'
+		reponse.status_code = 404
+	return reponse
+	
 @app.route( '/medicaments' , methods = [ 'GET' ] )
 def getMedicaments() :
 	medicaments = modeleGSBRV.getMedicaments()

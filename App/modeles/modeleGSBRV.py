@@ -159,6 +159,34 @@ def getPraticiens() :
 		return None
 
 
+def getMotifs() :
+	
+	try :
+		curseur = getConnexionBD().cursor()
+		requete = '''
+					select mot_id , mot_libelle , mot_precision , rap_num
+					from Motif
+				'''
+		
+		curseur.execute( requete , () )
+		
+		enregistrements = curseur.fetchall()
+		
+		Motifs = []
+		for unEnregistrement in enregistrements :
+			unMotif = {}
+			unMotif[ 'mot_id' ] = unEnregistrement[ 0 ]
+			unMotif[ 'mot_libelle' ] = unEnregistrement[ 1 ]
+			unMotif[ 'mot_precision' ] = unEnregistrement[ 2 ]
+			unMotif[ 'rap_num' ] = unEnregistrement[ 3 ]
+			Motifs.append( unMotif )
+			
+		curseur.close()
+		return Motifs
+		
+	except :
+		return None
+		
 def getMedicaments() :
 	
 	try :
