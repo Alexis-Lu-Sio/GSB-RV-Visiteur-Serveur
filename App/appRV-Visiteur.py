@@ -105,7 +105,7 @@ def addRapportVisite() :
 	return reponse
 	
 @app.route( '/rapports/echantillons' , methods = [ 'POST' ] )
-def addEchantillons(matricule, numRapport) :
+def addEchantillons() :
 	unEchantillon = json.loads( request.data )
 	nbEchantillons = modeleGSBRV.enregistrerEchantillonsOfferts( matricule , numRapport , echantillons, quantite )
 		

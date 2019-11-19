@@ -26,7 +26,7 @@ def seConnecter( matricule , mdp ) :
 	try :
 		curseur = getConnexionBD().cursor()
 		requete = '''
-					select vis_nom , vis_prenom
+					select vis_nom , vis_prenom, vis_mdp
 					from Visiteur
 					inner join Travailler as t1
 					on t1.vis_matricule = Visiteur.vis_matricule
@@ -36,16 +36,17 @@ def seConnecter( matricule , mdp ) :
 						where t2.vis_matricule = t1.vis_matricule
 					) 
 					and t1.tra_role <> 'Responsable'
-					and Visiteur.vis_matricule = %s
+					and Visiteur.vis_matricule = %s and vis_mdp = %s
 				'''
 
-		curseur.execute( requete , ( matricule , ) )
+		curseur.execute( requete , ( matricule , mdp ) )
 		
 		enregistrement = curseur.fetchone()
 		
 		visiteur = {}
 		if enregistrement != None :
 			visiteur[ 'vis_matricule' ] = matricule
+			visiteur[ 'vis_mdp' ] = mdp
 			visiteur[ 'vis_nom' ] = enregistrement[ 0 ]
 			visiteur[ 'vis_prenom' ] = enregistrement[ 1 ]
 			
