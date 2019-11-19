@@ -3,7 +3,7 @@
 
 
 import mysql.connector
-
+from datetime import date
 
 connexionBD = None
 
@@ -242,7 +242,7 @@ def genererNumeroRapportVisite( matricule ) :
 		return None
 
 
-def enregistrerRapportVisite( matricule  , rap_num , visite ,  bilan , praticien , dateSaisie , coeffConfiance , motif ) :
+def enregistrerRapportVisite( matricule  , visite ,  bilan , praticien , coeffConfiance, motif  ) :
 	
 	numRapportVisite = genererNumeroRapportVisite( matricule )
 	
@@ -252,11 +252,11 @@ def enregistrerRapportVisite( matricule  , rap_num , visite ,  bilan , praticien
 			curseur = getConnexionBD().cursor()
 
 			requete = '''
-				insert into RapportVisite( vis_matricule , rap_num , rap_date_visite , rap_bilan , pra_num , rap_date_saisie , rap_coeff_confiance, mot_id )
-				values( %s , %s , %s , %s , %s , %s , %s , %s )
+				insert into RapportVisite( vis_matricule , rap_num, rap_date_visite , rap_bilan , pra_num , rap_date_saisie, rap_coeff_confiance, mot_id )
+				values( %s , %s , %s , %s , %s , %s, %s , %s)
 				'''
 
-			curseur.execute( requete, ( matricule , rap_num , visite , bilan , praticien , dateSaisie , coeffConfiance , motif ) )
+			curseur.execute( requete, ( matricule , numRapportVisite, visite , bilan , praticien , date.today(), coeffConfiance, motif ) )
 			connexionBD.commit()
 			curseur.close()
 
@@ -269,7 +269,7 @@ def enregistrerRapportVisite( matricule  , rap_num , visite ,  bilan , praticien
 		return None
 		
 		
-def enregistrerEchantillonsOfferts( matricule , numRapport , echantillons, quantite ) :
+def enregistrerEchantillonsOfferts( matricule , echantillons, quantite ) :
 	
 	try:
 		curseur = getConnexionBD().cursor()
@@ -281,7 +281,7 @@ def enregistrerEchantillonsOfferts( matricule , numRapport , echantillons, quant
 			
 		nbOffresInserees = 0
 		for offre in echantillons.items() :
-			curseur.execute( requete, ( matricule , numRapport , offre[ 0 ] , offre[ 1 ], quantite) )
+			curseur.execute( requete, ( matricule ,numRapportVisite, echantillons , quantite) )
 			nbOffresInserees += curseur.rowcount
 			
 		connexionBD.commit()
